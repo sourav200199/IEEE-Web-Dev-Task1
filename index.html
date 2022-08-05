@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DS_for_all</title>
+    <link rel="stylesheet" href= "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  
+    <link rel="stylesheet" href="Style1.css">
+</head>
+<body class="backgroun">
+    <header class="clist" text-align = "center">Welcome to Algorithms Made Easy!</header>
+    <div class="clist">
+        <div class="container">
+        <button class="ssgn" id="str" onclick="togglehide1()"><b>String Algorithms [+]</b></button>
+            <ol id="Str">
+                <li class="cod" mouseover="button"><button  onclick="tg1()">Naive String Matching Algorithm (+)</button><br></li>
+                    <pre id="ns">
+                        <code>
+                        #include&ltstdio.h&gt;
+                        #include&ltstdlib.h&gt;
+                        #include&ltstring.h&gt;
+                        int main()
+                        {
+                            char *t,*p;
+                            t = (char*)malloc(100 * sizeof(char));
+                            p = (char*)malloc(100 * sizeof(char));
+                            printf("\nEnter text :");
+                            scanf("%s",t);
+                            printf("\nEnter pattern :");
+                            scanf("%s",p);
+                                    
+                            int l1 = strlen(t);
+                            int l2 = strlen(p);
+                            printf("\nText: %d",l1);
+                            printf("\nPattern: %d",l);
+                            for(int i=0; i<=l1-l2; i++)
+                            {
+                                if(t[i] == p[0])
+                                {
+                                    int c = 0;
+                                    for(int j=1; j< l2; j++)
+                                    {
+                                        if(t[j+i] != p[j]) 
+                                        {
+                                            c++;
+                                            break;
+                                        }
+                                    }
+                                    if(c==0)
+                                    printf("\nPattern found at %d",i+1);
+                                }
+                            }
+                        }
+                    </code>
+                    </pre>
+                <li class="cod"><button onclick="tg2()">KMP Algorithm (+)</button><br></li>
+                    <pre id="kmp">
+                        <code>
+                        #include&ltstdio.h&gt;
+                        #include&ltstring.h&gt;
+                        
+                        void prefixSuffixArray(char* pat, int M, int* pps) 
+                        {
+                           int length = 0;
+                           pps[0] = 0;
+                           int i = 1;
+                           while (i < M) 
+                           {
+                              if (pat[i] == pat[length]) 
+                              {
+                                 length++;
+                                 pps[i] = length;
+                                 i++;
+                              } 
+                              else 
+                              {
+                                 if (length != 0)
+                                 length = pps[length - 1];
+                                 else 
+                                 {
+                                    pps[i] = 0;
+                                    i++;
+                                 }
+                              }
+                           }
+                        }
+                        void KMPAlgorithm(char* text, char* pattern) 
+                        {
+                           int c = 0;
+                           int M = strlen(pattern);
+                           int N = strlen(text);
+                           int pps[M];
+                           prefixSuffixArray(pattern, M, pps);
+                           int i = 0;
+                           int j = 0;
+                           while (i < N) 
+                           {
+                              if (pattern[j] == text[i]) 
+                              {
+                                 j++;
+                                 i++;
+                              }
+                              if (j == M) 
+                              {
+                                 printf("%d\n", i - j);
+                                 j = pps[j - 1];
+                                 c++;
+                              }
+                              else if (i < N && pattern[j] != text[i]) 
+                              {
+                                 if (j != 0)
+                                 j = pps[j - 1];
+                                 else
+                                 i = i + 1;
+                              }
+                           }
+                           if(c==0)
+                           printf("\nPattern not found");
+                        }
+                        int main() 
+                        {
+                           char text[100] ;
+                           char pattern[100] ;
+                        
+                           printf("\nEnter the text and pattern:\n");
+                           scanf("%s%s",text,pattern);
+                           printf("The pattern is found in the text at the following index (FROM 0): \n");
+                           KMPAlgorithm(text, pattern);
+                           return 0;
+                        }
+                    </code>
+                    </pre>
+                
+                <li class="cod"><button  onclick="tg3()">Rabin Karp Algorithm (+)</button><br></li>
+                    <pre id="rk">
+                        <code>
+                            #include&ltstdio.h&gt;
+                            #include&ltstring.h&gt;
+                            
+                            #define d 256
+                            
+                            void search(char pat[], char txt[], int q)
+                            {
+                                int M = strlen(pat);
+                                int N = strlen(txt);
+                                int i, j;
+                                int p = 0; // hash value for pattern
+                                int t = 0; // hash value for txt
+                                int h = 1;
+                            
+                                for (i = 0; i < M - 1; i++)
+                                    h = (h * d) % q;
+                            
+                                for (i = 0; i < M; i++) 
+                                {
+                                    p = (d * p + pat[i]) % q;
+                                    t = (d * t + txt[i]) % q;
+                                }
+                            
+                                for (i = 0; i <= N - M; i++) 
+                                {
+                                    if (p == t) 
+                                    {
+                                        for (j = 0; j < M; j++) 
+                                        {
+                                            if (txt[i + j] != pat[j])
+                                                break;
+                                        }
+                                        if (j == M)
+                                            printf("Pattern found at index: %d \n", i+1);
+                                    }
+                                    if (i < N - M) 
+                                    {
+                                        t = (d * (t - txt[i] * h) + txt[i + M]) % q;
+                                        if (t < 0)
+                                            t = (t + q);
+                                    }
+                                }
+                            }
+                            int main()
+                            {
+                                char txt[100];
+                                char pat[100];
+                                int q;
+                            
+                                printf("\nEnter text: ");
+                                scanf("%s",txt);
+                                printf("\nEnter pattern: ");
+                                scanf("%s",pat);
+                                printf("\nEnter hash size (any prime no.): ");
+                                scanf("%d",&q);
+                            
+                                search(pat, txt, q);
+                            
+                                return 0;
+                            }
+                        </code>                            
+                        </pre>               
+            </ol>
+        </div>
+        <div class="container">
+        <button class="ssgn" id="sot" onclick="togglehide2()"><b>Sorting Algorithms [+]</b></button>
+            <ol id="Sot">
+                <li class="cod"><button onclick="tg4()">Bubble Sort (+)</button><br></li>
+                    <pre id="bs">
+                        <code>
+                            #include&ltstdio.h&gt;
+                            int main()
+                            {
+                                int l;
+                                int array[100];
+                                printf("Enter array size: ");
+                                scanf("%d",&l);
+                                printf("Enter array elements: ");
+                                for(int i=0;i< l;i++)
+                                    scanf("%d",&array[i]);
+                                for(int i=0;i< l;i++)
+                                {
+                                    for(int j=0;j< l-i-1;j++)
+                                    {
+                                        if(array[j] > array[j+1])
+                                        {
+                                            int t = array[j];
+                                            array[j] = array[j+1];
+                                            array[j+1] = t;
+                                        }
+                                    }
+                                }
+                                printf("\nSorted list:\n");
+                                for(int i=0;i< l;i++)
+                                    printf("%d ",array[i]);
+                            }
+                        </code>
+                    </pre>
+                
+                <li class="cod"><button onclick="tg5()">Selection Sort (+)</button><br></li>
+                    <pre id="ss">
+                        <code>
+                            #include&ltstdio.h&gt;
+                            int main()
+                            {
+                                int l;
+                                int array[100];
+                                printf("Enter array size: ");
+                                scanf("%d",&l);
+                                printf("Enter array elements: ");
+                                for(int i=0;i< l;i++)
+                                    scanf("%d",&array[i]);
+                                    
+                                for(int i=0;i< l-1;i++)
+                                {
+                                    int k = array[i];
+                                    int pos = i;
+                                    for(int j=i+1;j< l;j++)
+                                    {
+                                        if(k>array[j])
+                                        {
+                                            k = array[j];
+                                            pos = j;
+                                        }
+                                    }
+                                    int t = array[pos];
+                                    array[pos] = array[i];
+                                    array[i] = t;
+                                }
+                                printf("\nSorted list:\n");
+                                for(int i=0;i< l;i++)
+                                    printf("%d ",array[i]);
+                            }
+                        </code>
+                    </pre>
+                
+                <li class="cod"><button onclick="tg6()">Insertion Sort (+)</button><br></li>
+                    <pre id="is">
+                        <code>
+                            #include&ltstdio.h&gt;
+                            int main()
+                            {
+                                int l;
+                                int array[100];
+                                printf("Enter array size: ");
+                                scanf("%d",&l);
+                                printf("Enter array elements: ");
+                                for(int i=0;i< l;i++)
+                                    scanf("%d",&array[i]);
+                                for(int i=1;i< l;i++)
+                                {
+                                    int j = i-1;
+                                    int temp = array[i];
+                                    while((j>=0) && (array[j]>temp))
+                                    {
+                                        array[j+1] = array[j];
+                                        j--;
+                                    }
+                                    array[j+1] = temp;
+                                }
+                                printf("\nSorted list:\n");
+                                for(int i=0;i< l;i++)
+                                    printf("%d ",array[i]);
+                            }
+                        </code>
+                        </pre>
+                
+                <li class="cod"><button onclick="tg7()">Quick Sort (+)</button><br></li>
+                    <pre id="qs">
+                        <code>
+                            #include&ltstdio.h&gt;
+                            int swap(int *a,int *b)
+                            {
+                                int t = *a;
+                                *a = *b;
+                                *b = t;
+                            }
+                            int partition(int a[],int low,int high)
+                            {
+                                int pivot = a[high];
+                                int i = low - 1;
+                                for(int j = low; j<=high-1; j++)
+                                {
+                                    if(a[j]< pivot)
+                                    {
+                                        i++;
+                                        swap(&a[i],&a[j]);
+                                    }
+                                }
+                                
+                                swap(&a[i+1],&a[high]);
+                                return (i+1);
+                            }
+                            void quicksort(int a[],int low,int high)
+                            {
+                                if(low< high)
+                                {
+                                    int pt = partition(a,low,high);
+                                    quicksort(a,low,pt-1);
+                                    quicksort(a,pt+1,high);
+                                }	
+                            }
+                            int main()
+                            {
+                                int l;
+                                int array[100];
+                                
+                                printf("Enter array size: ");
+                                scanf("%d",&l);
+                                printf("Enter array elements: ");
+                                for(int i=0;i< l;i++)
+                                    scanf("%d",&array[i]);
+                                    
+                                quicksort(array, 0, l-1);
+                                
+                                printf("\nSorted list:\n");
+                                for(int i=0;i< l;i++)
+                                    printf("%d ",array[i]);
+                            }
+                        </code>
+                    </pre>
+                
+                <li class="cod"><button onclick="tg8()">Merge Sort (+)</button><br></li>
+                    <pre id="ms">
+                        <code>
+                            #include &ltstdio.h&gt;
+                            #include &ltstdlib.h&gt;
+                            
+                            void merge(int arr[], int l, int m, int r)
+                            {
+                                int i, j, k;
+                                int n1 = m - l + 1;
+                                int n2 = r - m;
+                            
+                                int L[n1], R[n2];
+                            
+                                for (i = 0; i < n1; i++)
+                                    L[i] = arr[l + i];
+                                for (j = 0; j < n2; j++)
+                                    R[j] = arr[m + 1 + j];
+                            
+                                i = 0; 
+                                j = 0; 
+                                k = l; 
+                                while (i < n1 && j < n2) 
+                                {
+                                    if (L[i] <= R[j]) 
+                                    {
+                                        arr[k] = L[i];
+                                        i++;
+                                    }
+                                    else 
+                                    {
+                                        arr[k] = R[j];
+                                        j++;
+                                    }
+                                    k++;
+                                }
+                            
+                                while (i < n1) 
+                                {
+                                    arr[k] = L[i];
+                                    i++;
+                                    k++;
+                                }
+                            
+                                while (j < n2) 
+                                {
+                                    arr[k] = R[j];
+                                    j++;
+                                    k++;
+                                }
+                            }
+                            
+                            void mergeSort(int arr[], int l, int r)
+                            {
+                                if (l < r) 
+                                {
+                                    int m = l + (r - l) / 2;
+                                    mergeSort(arr, l, m);
+                                    mergeSort(arr, m + 1, r);
+                                    merge(arr, l, m, r);
+                                }
+                            }
+                            
+                            void printArray(int A[], int size)
+                            {
+                                int i;
+                                for (i = 0; i < size; i++)
+                                    printf("%d ", A[i]);
+                                printf("\n");
+                            }
+                            
+                            int main()
+                            {
+                                int arr[100];
+                                int l;
+                            
+                                printf("\nEnter array size: ");
+                                scanf("%d",&l);
+                                printf("\nEnter array elements:");
+                                for(int i=0;i< l;i++)
+                                {
+                                    scanf("%d",&arr[i]);
+                                }
+                            
+                                mergeSort(arr, 0, l - 1);
+                            
+                                printf("\nSorted array is:\n");
+                                printArray(arr, l);
+                                return 0;
+                            }
+                        </code>
+                    </pre>
+                
+                <li class="cod"><button onclick="tg9()">Heap Sort (+)</button><br></li>
+                    <pre id="hs">
+                        <code>
+                        #include &ltstdio.h&gt;
+                        #include &ltstdlib.h&gt;
+                        using namespace std;
+                        int swap(int *a,int *b)
+                        {
+                            int t;
+                            t=*a;
+                            *a=*b;
+                            (*b)=t;
+                        }
+                        int left(int i)
+                        {
+                            return (2*i);
+                        }
+                        int right(int i)
+                        {
+                            return (2*i+1);
+                        }
+                        void maxheapify(int *a,int i,int n)
+                        {
+                            int l=left(i);
+                            int r=right(i);
+                            int largest;
+                            if((l<=n) && (a[i]< a[l]))
+                            {
+                                largest=l;
+                            }
+                            else
+                            {
+                                largest=i;
+                            }
+                            if((r<=n) && (a[largest]< a[r]))
+                                largest=r;
+                            if(largest!=i)
+                            {
+                                swap(&a[i],&a[largest]);
+                                maxheapify(a,largest,n);
+                            }
+                        }
+                        void build_maxheap(int *a,int n)
+                        {
+                            for(int i=n/2;i>=1;i--)
+                            {
+                                maxheapify(a,i,n);
+                            }
+                        }
+                        void heapsort(int *a,int n)
+                        {
+                            build_maxheap(a,n);
+                            for(int i=n;i>=2;i--)
+                            {
+                                swap(&a[i],&a[1]);
+                                n--;
+                                maxheapify(a,1,n);
+                            }
+                        }
+                        int main()
+                        {
+                            int n;
+                            printf("\nEnter size: ");
+                            scanf("%d",&n);
+                            int *a=(int *)malloc(sizeof(int)*(n+1));
+                            a[0] = 0;
+                            printf("\nEnter numbers: ");
+                            for(int i=1;i<=n;i++)
+                            {
+                                scanf("%d",(a+i));
+                            }
+                            heapsort(a,n);
+                            printf("\nSorted list :");
+                            for(int i=1;i<=n;i++)
+                            {
+                                printf("%d ",*(a+i));
+                            }
+                        }
+                    </code>
+                </pre>
+                
+            </ol>
+        </div>
+        <div class="container">
+        <button class="ssgn" id="geo" onclick="togglehide3()"><b>Geometric Algorithms [+]</b></button>
+            <ol id="Geo">
+                <li class="cod"><button onclick="tg10()">Check Orientation (+)</button><br></li>
+                    <pre id="or">
+                        <code>
+                        #include&ltstdio.h&gt;
+                        #include&ltstdlib.h&gt;
+                        
+                        typedef struct Point
+                        {
+                            int x,y;
+                        }point;
+                        
+                        int orientation(point p1, point p2, point p0)
+                        {
+                            int det = (p1.x - p0.x)*(p2.y - p0.y) - (p2.x - p0.x)*(p1.y - p0.y);
+                            if(det == 0)
+                            return 0;
+                            else if(det>0)
+                            return 1;
+                            else 
+                            return 2;
+                        }
+                        
+                        int main()
+                        {
+                            point p0,p1,p2;
+                            printf("\nEnter point P1(x,y): ");
+                            scanf("%d%d",&p1.x,&p1.y);
+                            printf("\nEnter point P2(x,y): ");
+                            scanf("%d%d",&p2.x,&p2.y);
+                            printf("\nEnter origin point P0(x,y): ");
+                            scanf("%d%d",&p0.x,&p0.y);
+                        
+                            if(orientation(p1,p2,p0)==0)
+                            {
+                                printf("\nCollinear");        
+                            }
+                            else if(orientation(p1,p2,p0)==1)
+                            {
+                                printf("\nCounter Clockwise");
+                            }
+                            else
+                            {
+                                printf("\nClockwise");
+                            }
+                        
+                            return 0;
+                        }
+                    </code>
+                    </pre>
+                
+                <li class="cod"><button onclick="tg11()">Check Intersection (+)</button><br></li>
+                    <pre id="in">
+                        <code>
+                        #include&ltstdio.h&gt;
+                        #include&ltstdlib.h&gt;
+                        
+                        typedef struct Point
+                        {
+                            int x,y;
+                        }point;
+                        
+                        int max(int a,int b)
+                        {
+                            return a>b?a:b;
+                        }
+                        int min(int a,int b)
+                        {
+                            return a< b?a:b;
+                        }
+                        
+                        int orientation(point p1, point p2, point p0)
+                        {
+                            int det = (p1.x - p0.x)*(p2.y - p0.y) - (p2.x - p0.x)*(p1.y - p0.y);
+                            if(det == 0)
+                            return 0;
+                            else if(det>0)
+                            return 1;
+                            else 
+                            return 2;
+                        }
+                        
+                        int issegment(point p, point q, point r) 
+                        { 
+                            if (q.x <= max(p.x, r.x) && q.x >= min(p.x, r.x) && 
+                                q.y <= max(p.y, r.y) && q.y >= min(p.y, r.y)) 
+                            return 1; 
+                        
+                            return 0; 
+                        } 
+                        
+                        int intersect(point p1, point q1, point p2, point q2) 
+                        { 
+                            // General case 
+                            if (orientation(p1, q1, p2) != orientation(p1, q1, q2) && orientation(p2, q2, p1) != orientation(p2, q2, q1)) 
+                                return 1; 
+                        
+                            // Special Cases 
+                            // p1, q1 and p2 are colinear and p2 lies on segment p1q1 
+                            if (orientation(p1, q1, p2) == 0 && issegment(p1, p2, q1)) 
+                            return 1; 
+                        
+                            // p1, q1 and q2 are colinear and q2 lies on segment p1q1 
+                            if (orientation(p1, q1, q2) == 0 && issegment(p1, q2, q1)) 
+                            return 1; 
+                        
+                            // p2, q2 and p1 are colinear and p1 lies on segment p2q2 
+                            if (orientation(p2, q2, p1) == 0 && issegment(p2, p1, q2)) 
+                            return 1; 
+                        
+                            // p2, q2 and q1 are colinear and q1 lies on segment p2q2 
+                            if (orientation(p2, q2, p1) == 0 && issegment(p2, q1, q2)) 
+                            return 1; 
+                        
+                            return 0; // Doesn't fall in any of the above cases 
+                        } 
+                        
+                        int main()
+                        {
+                            point p1,q1,p2,q2;
+                            printf("\n--------Line Segment 1--------");
+                            printf("\nEnter point P1(x,y): ");
+                            scanf("%d%d",&p1.x,&p1.y);
+                            printf("\nEnter point Q1(x,y): ");
+                            scanf("%d%d",&q1.x,&q1.y);
+                            printf("\n--------Line Segment 2--------");
+                            printf("\nEnter origin point P2(x,y): ");
+                            scanf("%d%d",&p2.x,&p2.y);
+                            printf("\nEnter origin point Q2(x,y): ");
+                            scanf("%d%d",&q2.x,&q2.y);
+                        
+                            if(intersect(p1,q1,p2,q2) == 1)
+                                printf("\nThe given pair of lines intersect.");
+                            else
+                                printf("\nThe given pair of lines do not intersect.");
+                        
+                            return 0;
+                        }
+                    </code>
+                    </pre>
+                
+                <li class="cod"><button onclick="tg12()">Graham Scan (+)</button><br></li>
+                    <pre id="gs">
+                        <code>
+                            #include &ltstdio.h&gt;
+                            #include &ltstdlib.h&gt;
+                            #include &ltstring.h&gt;
+                            #include &ltstdbool.h&gt;
+                            #include &ltlimits.h&gt;
+                            
+                            #define MAX_POINTS  1000
+                            int minimum_index = 1;
+                            int size = -1;
+                            typedef struct Point
+                            {
+                                int x;
+                                int y;
+                            }Point;
+                            
+                            Point P0;
+                            
+                            struct Point stack[MAX_POINTS];
+                            
+                            bool tie_case(int y_min, int y, int x, int x_min)
+                            {
+                                bool flag = false;
+                            
+                                if (y_min == y)
+                                {
+                                    if (x < x_min)
+                                    {
+                                        flag = true;
+                                    }
+                                }
+                                return flag;
+                            }
+                            
+                            int min_y(int total_points, Point points[total_points])
+                            {
+                                int bottom_y = points[0].y;
+                                int i = 1;
+                                while (i < total_points)
+                                {
+                                    int point_y = points[i].y;
+                                    bool tie = tie_case(bottom_y, point_y, points[i].x, points[minimum_index].x);
+                                    if ((point_y < bottom_y) || (tie == true))
+                                    {
+                                        bottom_y = points[i].y;
+                                        minimum_index = i;
+                                    }
+                                    i++;
+                                }
+                                return bottom_y;
+                            }
+                            
+                            void swap_bottom(int total, Point points[total], int first_index, int second_index)
+                            {
+                                Point temp = points[first_index];
+                                points[first_index] = points[second_index];
+                                points[second_index] = temp;
+                            }
+                            
+                            int find_orientation(Point p0, Point p1, Point p2)
+                            {
+                                int cross_product = (p1.y - p0.y) * (p2.x - p1.x) -
+                                                    (p1.x - p0.x) * (p2.y - p1.y);
+                                if (cross_product == 0)
+                                {
+                                    return 0;
+                                }
+                                else if (cross_product > 0)
+                                {
+                                    return 1;
+                                }
+                                else
+                                {
+                                    return -1;
+                                }
+                            }
+                            
+                            int greater_distance(Point p1, Point p2, Point p3)
+                            {
+                                int first_distance = (p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y);
+                                int second_distance = (p1.x - p3.x) * (p1.x - p3.x) + (p1.y - p3.y) * (p1.y - p3.y);
+                                if (first_distance >= second_distance)
+                                {
+                                    return -1;
+                                }
+                                else
+                                {
+                                    return 1;
+                                }
+                            }
+                            
+                            int compare_coordinates(const void *p, const void *q)
+                            {
+                                Point *P1 = (Point *)p;
+                                Point *P2 = (Point *)q;
+                            
+                                int orint = find_orientation(P0, *P1, *P2);
+                                if (orint == 0)
+                                {
+                                    return greater_distance(P0, *P2, *P1);
+                                }
+                                if (orint == -1)
+                                {
+                                    return -1;
+                                }
+                                else
+                                {
+                                    return 1;
+                                }
+                            }
+                            
+                            int check_orientation(int total, Point points[total])
+                            {
+                                int new_size = 1;
+                                int counter = 1;
+                                while (counter < total)
+                                {
+                                    while (counter < total - 1 && find_orientation(P0, points[counter], points[counter + 1]) == 0)
+                                    {
+                                        counter++;
+                                    }
+                                    points[new_size] = points[counter];
+                                    new_size = new_size + 1;
+                                    counter = counter + 1;
+                                }
+                                return new_size;
+                            }
+                            
+                            void push(Point P)
+                            {
+                                size = size + 1;
+                                stack[size] = P;
+                            }
+                            
+                            void pop()
+                            {
+                                size = size - 1;
+                            }
+                            
+                            void print()
+                            {
+                                int i = 0;
+                                for(i = 0; i <= size; i++)
+                                {
+                                    printf("%d %d\n",stack[i].x,stack[i].y);
+                                }
+                            }
+                            
+                            void convexHull(int total_points, Point points[total_points])
+                            {
+                                int bottom_y = min_y(total_points, points);
+                                swap_bottom(total_points, points, 0, minimum_index);
+                            
+                                P0 = points[0];push(points[0]);
+                                qsort(&points[1], total_points - 1, sizeof(Point), compare_coordinates);
+                            
+                                int updated_size = check_orientation(total_points, points);
+                            
+                                if(updated_size < 3)
+                                {
+                                    return;
+                                }
+                            
+                                push(points[1]);
+                                push(points[2]);
+                            
+                                int i = 1;
+                                for(i = 3; i < updated_size; i++)
+                                {
+                                    while(find_orientation(stack[size-1],stack[size],points[i])>-1)
+                                    {
+                                        pop();
+                                    }
+                                    push(points[i]);
+                                }
+                            
+                                printf("\nFollowing vertices form the convex hull:\n");
+                                print();
+                            }
+                            
+                            int main()
+                            {
+                                int i = 0;
+                                int total_points = 0;
+                            
+                                printf("\nEnter total no. of points: ");
+                                scanf("%d", &total_points);
+                                Point arr_points[total_points];
+                                printf("\nEnter the vertices:\n");
+                                for (i = 0; i < total_points; i++)
+                                {
+                                    scanf("%d %d", &arr_points[i].x, &arr_points[i].y);
+                                }                            
+                                //Compute all the vertices for convex hall.
+                                convexHull(total_points, arr_points);
+                                return 0;
+                            }
+                        </code>
+                    </pre>
+                
+                <li class="cod"><button onclick="tg13()">Jarvis March (+)</button><br></li>
+                    <pre id="jm">
+                        <code>
+                        #include&ltstdio.h&gt;
+                        #include&ltmath.h&gt;
+                        #include&ltstdlib.h&gt;
+                         #define pi 3.14159
+                         typedef struct v1
+                        {
+                              int x, y;
+                        }vertex;
+                        vertex p0;
+                        int process_vertices(  int n, vertex *v)
+                        {
+                          int i;
+                          printf("\nEnter the vertices:");
+                          for(i=0;i< n;i++) 
+                              scanf(" %d %d",&v[i].x,&v[i].y);
+                        
+                          return n;
+                        }
+                        void swap(vertex *v1, vertex *v2)
+                        {
+                            vertex temp = *v1;
+                            *v1 = *v2;
+                            *v2 = temp;
+                        }
+                        int orientation(vertex p, vertex q, vertex r)
+                        {
+                         int val = (int)(q.y - p.y) * (r.x - q.x) - ( int)(q.x - p.x) * (r.y - q.y);
+                        if (val == 0) return 0;
+                        return (val > 0)? 1: 2;
+                        }
+                         int distSq(vertex p1, vertex p2)
+                        {
+                            return (int)(p1.x - p2.x)*(p1.x - p2.x) + ( int)(p1.y - p2.y)*(p1.y     - p2.y);
+                        }
+                         int compare(const void *vp1, const void *vp2)
+                         {
+                           vertex *p1 = (vertex *)vp1;
+                            vertex *p2 = (vertex *)vp2;
+                        
+                        
+                            int o = orientation(p0, *p1, *p2);
+                            if (o == 0)
+                             return (distSq(p0, *p2) >= distSq(p0, *p1))? -1 : 1;
+                        
+                            return (o == 2)? -1: 1;
+                         }
+                        vertex * Convex_Hull(vertex *v,  int *count)
+                        {
+                         int n = *count, ymin = v[0].y, min = 0, i,m;vertex *stack;
+                        for(i = 1; i < n; i++)
+                        {
+                            if((v[i].y < ymin) || ((v[i].y == ymin) && (v[i].x < v[min].x)))
+                            {
+                                ymin = v[i].y;
+                                min = i;
+                            }
+                        }
+                        swap(&v[0], &v[min]);
+                        p0 = v[0];
+                        if(n > 1)
+                            qsort(&v[1], n - 1, sizeof(vertex), compare);
+                             m = 1;
+                        for(i = 1; i < n; i++)
+                        {
+                            while((i < n - 1) && orientation(v[0], v[i], v[i + 1]) == 0)
+                                i++;
+                            v[m++] = v[i];
+                        }
+                        *count = n = m;
+                        if(n < 3)
+                            return v;
+                          stack = (vertex *)malloc(n * sizeof(vertex));
+                        stack[0] = v[0];
+                        stack[1] = v[1];
+                        stack[2] = v[2];
+                        m = 2;
+                        for(i = 3; i < n; i++)
+                        {
+                            while(orientation(stack[m-1], stack[m], v[i]) != 2)
+                                m--;
+                            stack[++m] = v[i];
+                        }
+                        *count = n = ++m;
+                        free(v);
+                        return stack;
+                        }
+                        
+                         int main()
+                        {
+                         int t, n, i,count; vertex *v;
+                            printf("\nEnter no. of vertices:");
+                            scanf("%d", &n);
+                        
+                            v = (vertex *)malloc( n * sizeof(vertex));
+                            count = process_vertices(n, v);
+                        
+                            v = Convex_Hull(v, &count);
+                            printf("Following vertices form the convex hull:\n");
+                            for(i=0;i< count;i++) 
+                            printf("%d %d\n",v[i].x,v[i].y);
+                        
+                        return 0;
+                        }
+                    </code>
+                    </pre>
+                
+            </ol>
+        </div>
+        <div class="container">
+        <button class="ssgn" id="net" onclick="togglehide4()"><b>Network Flow Algorithms [+]</b></button>
+            <ol id="Netw">
+                <li class="cod"><button  onclick="tg14()">Floyd's Algorithm (+)</button><br></li>
+                    <pre id="fl">
+                        <code>
+                        #include&ltstdio.h&gt;
+                        #define MAX 100
+                        
+                        void display(int matrix[MAX][MAX], int n);
+                        int adj[MAX][MAX];
+                        int n;
+                        void create_graph();
+                        
+                        int main()
+                        {
+                                int i,j,k;
+                                int P[MAX][MAX];
+                        
+                                create_graph();
+                                printf("\nThe adjacency matrix is :\n");
+                                display(adj,n);
+                        
+                                for(i=0; i< n; i++)
+                                   for(j=0; j< n; j++)
+                                         P[i][j] = adj[i][j];
+                        
+                                for(k=0; k< n; k++)
+                                {
+                                        for(i=0; i< n; i++)
+                                          for(j=0; j< n; j++)
+                                          {
+                                              if (P[i][k] + P[k][j] < P[i][j])
+                                                P[i][j] = P[i][k] + P[k][j];
+                                          }
+                                        if(k==n-1)
+                                        {
+                                          printf("\nP%d is :\n",k);
+                                          display(P,n);
+                                        }
+                                }
+                                //printf("\nP%d is the path matrix of the given graph\n",k-1);
+                        }
+                        
+                        void display(int matrix[MAX][MAX],int n)
+                        {
+                                int i,j;
+                                for(i=0; i< n; i++)
+                                {
+                                        for(j=0; j< n; j++)
+                                                printf("%3d",matrix[i][j]);
+                                        printf("\n");
+                                }
+                        }
+                        void create_graph()
+                        {
+                                int i,j;
+                        
+                                printf("\nEnter number of vertices : ");
+                                scanf("%d",&n);
+                        
+                                printf("\nEnter the adjacency matrix :\n");
+                                for(i=0; i< n; i++)
+                                {
+                                  for(j=0; j< n; j++)
+                                  {
+                                    scanf("%d",&adj[i][j]);
+                                  }
+                                }
+                        }
+                    </code>
+                    </pre>
+                
+                <li class="cod"><button onclick="tg15()">Floyd Warshall Algorithm (+)</button><br></li>
+                    <pre  id="wl">
+                        <code>
+                            #include&ltstdio.h&gt;
+                            #define MAX 100
+                            
+                            void display(int matrix[MAX][MAX], int n);
+                            int adj[MAX][MAX];
+                            int n;
+                            void create_graph();
+                            
+                            int main()
+                            {
+                                    int i,j,k;
+                                    int P[MAX][MAX];
+                            
+                                    create_graph();
+                                    printf("\nThe adjacency matrix is :\n");
+                                    display(adj,n);
+                            
+                                    for(i=0; i< n; i++)
+                                       for(j=0; j< n; j++)
+                                             P[i][j] = adj[i][j];
+                            
+                                    for(k=0; k< n; k++)
+                                    {
+                                            for(i=0; i< n; i++)
+                                              for(j=0; j< n; j++)
+                                                  P[i][j] = ( P[i][j] || ( P[i][k] && P[k][j] ) );
+                                            if(k==n-1)
+                                            {
+                                              printf("\nP%d is :\n",k);
+                                              display(P,n);
+                                            }
+                                    }
+                                    //printf("\nP%d is the path matrix of the given graph\n",k-1);
+                            }
+                            
+                            void display(int matrix[MAX][MAX],int n)
+                            {
+                                    int i,j;
+                                    for(i=0; i< n; i++)
+                                    {
+                                            for(j=0; j< n; j++)
+                                                    printf("%3d",matrix[i][j]);
+                                            printf("\n");
+                                    }
+                            }
+                            void create_graph()
+                            {
+                                    int i,j;
+                            
+                                    printf("\nEnter number of vertices : ");
+                                    scanf("%d",&n);
+                            
+                                    printf("\nEnter the adjacency matrix :\n");
+                                    for(i=0; i< n; i++)
+                                    {
+                                      for(j=0; j< n; j++)
+                                      {
+                                        scanf("%d",&adj[i][j]);
+                                      }
+                                    }
+                            }
+                        </code>
+                        </pre>
+                
+                <li class="cod"><button onclick="tg16()">Ford Fulkerson Algorithm (+)</button><br></li>
+                    <pre  id="ff">
+                        <code>
+                            #include &ltstdio.h&gt;
+
+                            #define A 0
+                            #define B 1
+                            #define C 2
+                            #define MAX_NODES 1000
+                            #define O 1000000000
+                            
+                            int n;
+                            int e;
+                            int capacity[MAX_NODES][MAX_NODES];
+                            int flow[MAX_NODES][MAX_NODES];
+                            int color[MAX_NODES];
+                            int pred[MAX_NODES];
+                            
+                            int min(int x, int y) {
+                              return x < y ? x : y;
+                            }
+                            
+                            int head, tail;
+                            int q[MAX_NODES + 2];
+                            
+                            void enqueue(int x) {
+                              q[tail] = x;
+                              tail++;
+                              color[x] = B;
+                            }
+                            
+                            int dequeue() {
+                              int x = q[head];
+                              head++;
+                              color[x] = C;
+                              return x;
+                            }
+                            
+                            // Using BFS as a searching algorithm
+                            int bfs(int start, int target) {
+                              int u, v;
+                              for (u = 0; u < n; u++) {
+                                color[u] = A;
+                              }
+                              head = tail = 0;
+                              enqueue(start);
+                              pred[start] = -1;
+                              while (head != tail) {
+                                u = dequeue();
+                                for (v = 0; v < n; v++) {
+                                  if (color[v] == A && capacity[u][v] - flow[u][v] > 0) {
+                                    enqueue(v);
+                                    pred[v] = u;
+                                  }
+                                }
+                              }
+                              return color[target] == C;
+                            }
+                            
+                            // Applying fordfulkerson algorithm
+                            int fordFulkerson(int source, int sink) {
+                              int i, j, u;
+                              int max_flow = 0;
+                              for (i = 0; i < n; i++) {
+                                for (j = 0; j < n; j++) {
+                                  flow[i][j] = 0;
+                                }
+                              }
+                            
+                              // Updating the residual values of edges
+                              while (bfs(source, sink)) {
+                                int increment = O;
+                                for (u = n - 1; pred[u] >= 0; u = pred[u]) {
+                                  increment = min(increment, capacity[pred[u]][u] - flow[pred[u]][u]);
+                                }
+                                for (u = n - 1; pred[u] >= 0; u = pred[u]) {
+                                  flow[pred[u]][u] += increment;
+                                  flow[u][pred[u]] -= increment;
+                                }
+                                // Adding the path flows
+                                max_flow += increment;
+                              }
+                              for(int i=0; i< n;i++)
+                              {
+                                for(int j=0;j< n;j++)
+                                  printf("%d ",flow[i][j]);
+                                printf("\n");
+                              }
+                              return max_flow;
+                            }
+                            
+                            int main() 
+                            {
+                              scanf("%d",&n);
+                              e = n*n;
+                              for (int i = 0; i < n; i++) 
+                              {
+                                for (int j = 0; j < n; j++) 
+                                {
+                                  scanf("%d",&capacity[i][j]);
+                                }
+                              }
+                            
+                              int s = 0, t = 5;
+                              printf("Max Flow: %d\n", fordFulkerson(s, t));
+                            }
+                        </code>
+                        </pre>
+                
+            </ol>
+        </div>        
+    </div>
+    <footer class="footy"><h4>Thank You for visiting my website!</h4>
+        <div class="foot"><b>Follow me on:</b></div>
+        <div class="foot"><b>Instagram <a href="#" class="fa fa-instagram"></a></b></div>
+        <div class="foot"><b> Facebook <a href="#" class="fa fa-facebook"></a></b></div>
+        <div class="foot"><b>   GitHub <a href="#" class="fa fa-github"></a></b></div></b></div>
+    </footer>
+    <script src="indexjs.js"></script>
+    <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
+</body>
+</html>

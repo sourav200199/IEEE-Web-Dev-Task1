@@ -1,0 +1,137 @@
+*{
+    text-decoration: none;
+    margin: 0;
+    box-sizing: border-box;
+    padding: 0;
+}
+.backgroun{
+    background-image: url("123-24.jpg");
+    background-size: cover;
+}
+.fa {  
+    padding: 2px;  
+    text-align: center;  
+    margin: 5px 2px;  
+    font-size: 30px;  
+    width: 30px;  
+  }  
+  .fa-facebook {  
+    background: #3B5998;  
+    color: white;  
+  }  
+  .fa-instagram {  
+    background: #3B5998;  
+    color: white;  
+  } 
+  .fa-github {  
+    background: #3B5998;  
+    color: white;  
+  } 
+.clist{
+    display: grid;
+    /*grid-template-columns: 1fr 1fr 1fr 1fr....here 'fr' represents fraction....or-(see below)*/
+    grid-template-columns: repeat(2, auto);
+    /*margin: 5px;*/
+    grid-gap: 1rem;
+    /*border: 2px solid black;*/
+}
+.container{
+    border: 2px solid black;
+    justify-content: center;
+    background-color: indianred;
+    align-content: center;
+    padding-bottom: 10px;
+}
+.ssgn{
+    margin: 10px 10px 0px 10px;
+    justify-content: center;
+    border-radius: 5px;
+    color: darkred;
+    border: 4px solid black;
+    cursor: pointer;
+    position: relative;
+    left: 45%;
+    top: 0%;
+}
+.ssgn:hover{
+    background-color: rgb(219, 216, 44);
+}
+.ssgn:active{
+    background-color: rgb(51, 8, 8);
+}
+code {
+    background-color: #EEEEEE;
+    font-family: Consolas,Menlo,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New,monospace,serif;
+    text-align: left;
+}
+  pre {
+    background-color: #EEEEEE;
+    font-family: Consolas,Menlo,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New,monospace,serif;
+    margin-bottom: 10px;
+    max-height: 600px;
+    overflow: auto;
+    width: 600px;
+    overflow-x: scroll;
+  }
+
+button{
+    border: 2px solid black;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+footer,h1{
+    text-align: center;
+}
+.foot{
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+}
+header{
+    color: white;
+    border: 2px solid black;
+    text-align: center;
+    width: 100%;
+    font-size: 100px;
+    align-content: center;
+}
+.footy{
+    background-color: rgb(59, 89, 152);
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+@media (min-width: 500px) and (max-width: 1000px)
+{
+    .clist{
+        display: grid;
+        grid-template-columns: repeat(1, auto);
+        grid-gap: 1rem;
+        /*border: 2px solid black;*/
+    }
+    .footy{
+        background-color: rgb(59, 89, 152);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-content: center;
+    }
+}
+
+@media (max-width: 499px)
+{
+    .clist{
+        display: grid;
+        grid-template-columns: repeat(1, auto);
+        grid-gap: 1rem;
+        /*border: 2px solid black;*/
+    }
+    .footy{
+        background-color: rgb(59, 89, 152);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-content: center;
+    }
+}
